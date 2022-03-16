@@ -15,18 +15,18 @@ function renderTime() {
   sec--;
   minute.textContent = min;
   second.textContent = sec;
-  if (0 <= sec && sec < 10) {
-    second.textContent = `0${sec}`;
-  }
-  if (min === 0) {
-    minute.textContent = "00";
-  }
+  if (0 <= sec && sec < 10) second.textContent = `0${sec}`;
+  if (min === 0) minute.textContent = "00";
   if (min < 0) {
-    clearInterval(timer);
-    removePause();
-    minute.textContent = `00`;
-    second.textContent = `03`;
+    startBreak();
   }
+}
+
+function startBreak() {
+  clearInterval(timer);
+  removePause();
+  minute.textContent = "00";
+  second.textContent = "03";
 }
 
 function startTimer() {
