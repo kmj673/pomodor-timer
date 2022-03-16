@@ -9,14 +9,13 @@ function renderTime() {
   let min = parseInt(minute.textContent);
   let sec = parseInt(second.textContent);
   if (sec === 0) {
-    second.textContent = "00";
     min--;
     sec = 60;
   }
   sec--;
   minute.textContent = min;
   second.textContent = sec;
-  if (0 < sec && sec < 10) {
+  if (0 <= sec && sec < 10) {
     second.textContent = `0${sec}`;
   }
   if (min === 0) {
