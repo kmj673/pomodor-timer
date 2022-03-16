@@ -8,16 +8,23 @@ let second = document.querySelector(".second");
 function renderTime() {
   let min = parseInt(minute.textContent);
   let sec = parseInt(second.textContent);
-  if (sec == 0) {
-    second.textContent = "00";
+  if (sec === 0) {
     min--;
     sec = 60;
   }
   sec--;
   minute.textContent = min;
   second.textContent = sec;
+  if (0 <= sec && sec < 10) {
+    second.textContent = `0${sec}`;
+  }
+  if (min === 0) {
+    minute.textContent = "00";
+  }
   if (min < 0) {
-    minute.textContent = `25`;
+    clearInterval(timer);
+    removePause();
+    minute.textContent = `05`;
     second.textContent = `00`;
   }
 }
@@ -36,22 +43,22 @@ function resetTimer() {
   second.textContent = `00`;
 }
 
-function toggleStart() {
+function removePause() {
   pause.classList.add("hidden");
   start.classList.remove("hidden");
 }
 
-function togglePause() {
+function removeStart() {
   start.classList.add("hidden");
   pause.classList.remove("hidden");
 }
 
 start.addEventListener("click", () => {
-  togglePause();
+  removeStart();
   startTimer();
 });
 pause.addEventListener("click", () => {
-  toggleStart();
+  removePause();
   pauseTimer();
 });
 reset.addEventListener("click", resetTimer);
