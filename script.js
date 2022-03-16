@@ -24,8 +24,8 @@ function renderTime() {
   if (min < 0) {
     clearInterval(timer);
     removePause();
-    minute.textContent = `05`;
-    second.textContent = `00`;
+    minute.textContent = `00`;
+    second.textContent = `03`;
   }
 }
 
