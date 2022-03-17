@@ -2,45 +2,62 @@
 const start = document.querySelector(".start");
 const pause = document.querySelector(".pause");
 const reset = document.querySelector(".reset");
+const timer = document.querySelector("#timer");
 let minute = document.querySelector(".minute");
 let second = document.querySelector(".second");
 
-function renderTime() {
-  let min = parseInt(minute.textContent);
-  let sec = parseInt(second.textContent);
-  if (sec === 0) {
-    min--;
-    sec = 60;
-  }
-  sec--;
+function decreaseTime(time) {
+  time--;
+  let min = parseInt(time / 60);
+  let sec = time % 60;
   minute.textContent = min;
   second.textContent = sec;
-  if (0 <= sec && sec < 10) {
-    second.textContent = `0${sec}`;
-  }
-  if (min === 0) {
-    minute.textContent = "00";
-  }
-  if (min < 0) {
-    clearInterval(timer);
+  // to show it as 00:00 format
+  if (0 <= min && min < 10) minute.textContent = `0${min}`;
+  if (0 <= sec && sec < 10) second.textContent = `0${sec}`;
+  if (time <= 0 && timer.classList[0] === "focusTimer") {
     removePause();
-    minute.textContent = `00`;
-    second.textContent = `03`;
+    clearInterval(focusTimer);
+    minute.textContent = `05`;
+    second.textContent = `00`;
+    timer.classList.remove("focusTimer");
+    timer.classList.add("breakTimer");
+  } else if (time <= 0 && timer.classList[0] === "breakTimer") {
+    removePause();
+    clearInterval(breakTimer);
+    minute.textContent = `25`;
+    second.textContent = `00`;
+    timer.classList.remove("breakTimer");
+    timer.classList.add("focusTimer");
   }
 }
 
-function startTimer() {
-  timer = setInterval(renderTime, 1000);
+// case of focus time 25mins
+function renderFocusTime() {
+  let time = parseInt(minute.textContent) * 60 + parseInt(second.textContent);
+  decreaseTime(time);
+}
+
+// case of break time 5mins
+function renderBreakTime() {
+  let time = parseInt(minute.textContent) * 60 + parseInt(second.textContent);
+  decreaseTime(time);
 }
 
 function pauseTimer() {
-  clearInterval(timer);
+  console.log(timer.classList[0] + " pause");
+  if (timer.classList[0] === "focusTimer") clearInterval(focusTimer);
+  if (timer.classList[0] === "breakTimer") clearInterval(breakTimer);
 }
 
 function resetTimer() {
-  clearInterval(timer);
+  removePause();
+  if (timer.classList[0] === "focusTimer") clearInterval(focusTimer);
+  if (timer.classList[0] === "breakTimer") clearInterval(breakTimer);
   minute.textContent = `25`;
   second.textContent = `00`;
+  timer.className = "";
+  timer.classList.add("focusTimer");
 }
 
 function removePause() {
@@ -55,8 +72,15 @@ function removeStart() {
 
 start.addEventListener("click", () => {
   removeStart();
-  startTimer();
+  if (timer.classList[0] === "breakTimer") {
+    console.log("breaktimer start");
+    breakTimer = setInterval(renderBreakTime, 1000);
+  } else if (timer.classList[0] === "focusTimer") {
+    console.log("focustimer start");
+    focusTimer = setInterval(renderFocusTime, 1000);
+  }
 });
+
 pause.addEventListener("click", () => {
   removePause();
   pauseTimer();
