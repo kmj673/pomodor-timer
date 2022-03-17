@@ -5,7 +5,12 @@ const reset = document.querySelector(".reset");
 let minute = document.querySelector(".minute");
 let second = document.querySelector(".second");
 
-function renderTime() {
+const WORK = "01";
+const BREAK = "02";
+const ZERO = "00";
+const HIDDEN = "hidden";
+
+function decreaseTime() {
   let min = parseInt(minute.textContent);
   let sec = parseInt(second.textContent);
   if (sec === 0) {
@@ -16,21 +21,37 @@ function renderTime() {
   minute.textContent = min;
   second.textContent = sec;
   if (0 <= sec && sec < 10) second.textContent = `0${sec}`;
-  if (min === 0) minute.textContent = "00";
+  if (min === 0) minute.textContent = ZERO;
+  return min;
+}
+
+function renderTime() {
+  let min = decreaseTime();
   if (min < 0) {
-    startBreak();
+    breakTimer();
   }
 }
 
-function startBreak() {
+function renderBreakTime() {
+  let min = decreaseTime();
+  if (min < 0) {
+    resetTimer();
+  }
+}
+
+function breakTimer() {
   clearInterval(timer);
   removePause();
-  minute.textContent = "00";
-  second.textContent = "03";
+  minute.textContent = BREAK;
+  second.textContent = ZERO;
 }
 
 function startTimer() {
-  timer = setInterval(renderTime, 1000);
+  if (minute.textContent == WORK) {
+    timer = setInterval(renderTime, 1000);
+  } else if (minute.textContent == BREAK) {
+    timer = setInterval(renderBreakTime, 1000);
+  }
 }
 
 function pauseTimer() {
@@ -39,18 +60,19 @@ function pauseTimer() {
 
 function resetTimer() {
   clearInterval(timer);
-  minute.textContent = `25`;
-  second.textContent = `00`;
+  removePause();
+  minute.textContent = WORK;
+  second.textContent = ZERO;
 }
 
 function removePause() {
-  pause.classList.add("hidden");
-  start.classList.remove("hidden");
+  pause.classList.add(HIDDEN);
+  start.classList.remove(HIDDEN);
 }
 
 function removeStart() {
-  start.classList.add("hidden");
-  pause.classList.remove("hidden");
+  start.classList.add(HIDDEN);
+  pause.classList.remove(HIDDEN);
 }
 
 start.addEventListener("click", () => {
