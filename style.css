@@ -9,7 +9,6 @@ body {
 button {
   color: inherit;
   font-size: 1rem;
-  border: 0px solid #000;
   width: 5rem;
 }
 span {
