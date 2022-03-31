@@ -51,6 +51,7 @@ function pauseTimer() {
 }
 
 function resetTimer() {
+  console.log(`reset timer`);
   removePause();
   if (timer.classList[0] === "focusTimer") clearInterval(focusTimer);
   if (timer.classList[0] === "breakTimer") clearInterval(breakTimer);
